@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- 面板显示/隐藏 -->
+    <sys:String x:Key="Icon.EyeOpen">&#xE8F4;</sys:String>
+    <sys:String x:Key="Icon.EyeClosed">&#xE8F5;</sys:String>
+
+    <!-- 工具栏 -->
+    <sys:String x:Key="Icon.Connect"></sys:String>
+    <sys:String x:Key="Icon.Laser"></sys:String>
+    <sys:String x:Key="Icon.Start"></sys:String>
+    <sys:String x:Key="Icon.Pause"></sys:String>
+    <sys:String x:Key="Icon.Stop"></sys:String>
+
+    <!-- 文件 / 设置 -->
+    <sys:String x:Key="Icon.Save"></sys:String>
+    <sys:String x:Key="Icon.Folder"></sys:String>
+    <sys:String x:Key="Icon.Settings"></sys:String>
+
+    <!-- 信息 / 错误 -->
+    <sys:String x:Key="Icon.Info"></sys:String>
+    <sys:String x:Key="Icon.Error"></sys:String>
+
+</ResourceDictionary>
