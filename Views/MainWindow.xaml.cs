@@ -23,6 +23,10 @@ namespace RamanSoftwareV2.Views
             }
 
             DataContext = new MainWindowViewModel();
+
+            FileListBox.Items.Add("苯_1.0mg_20251113-100608_001");
+            FileListBox.Items.Add("苯_1.0mg_20251113-100609_002");
+            FileListBox.Items.Add("水_0.2mg_20251113-100610_003");
         }
     }
 }

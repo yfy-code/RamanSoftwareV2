@@ -15,6 +15,18 @@ namespace RamanSoftwareV2.ViewModels
     {
         public ICommand EquipmentCalibrationCommand { get; }
         public ICommand OpenConnectionSettingsCommand { get; }
+        public ICommand ConnectCommand { get; }
+        public ICommand DisconnectCommand { get; }
+
+        public string ConnectButtonText
+        {
+            get=> AppState.Status.IsConnected ? "Disconnect" : "Connect";
+        }
+
+        public ICommand ConnectButtonCommand
+        {
+            get => AppState.Status.IsConnected ? DisconnectCommand : ConnectCommand;
+        }
 
 
         /*-----------------------------------------
@@ -67,8 +79,45 @@ namespace RamanSoftwareV2.ViewModels
          -----------------------------------------*/
         public MainWindowViewModel()
         {
-            // 初始化命令
+            // 左侧面板展开/折叠
             ToggleLeftPanelCommand = new RelayCommand(_ => ToggleLeftPanel());
+
+            // 连接命令
+            ConnectCommand= new RelayCommand(async _ =>
+            {
+                bool ok = await AppState.DeviceManager.ConnectAsync(AppState.Settings);
+
+                // 通知 UI 刷新状态栏文字
+                OnPropertyChanged(nameof(ConnectionStatus));
+                OnPropertyChanged(nameof(ConnectButtonText));
+                OnPropertyChanged(nameof(ConnectButtonCommand));
+
+                if (!ok)
+                {
+                    MessageBox.Show("连接失败，请检查连接设置。",
+                        "Connection",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+            });
+
+            // 断开命令
+            DisconnectCommand = new RelayCommand(_ =>
+            {
+                AppState.DeviceManager.Disconnect();
+                // 通知 UI 刷新状态栏文字
+                OnPropertyChanged(nameof(ConnectionStatus));
+                OnPropertyChanged(nameof(ConnectButtonText));
+                OnPropertyChanged(nameof(ConnectButtonCommand));
+            });
+
+            //订阅全局连接状态变化事件（比如未来自动断开 / 出错时也能刷新 UI）
+            AppState.DeviceManager.ConnectionStatusChanged += (s, connected) =>
+            {
+                OnPropertyChanged(nameof(ConnectionStatus));
+                OnPropertyChanged(nameof(ConnectButtonText));
+                OnPropertyChanged(nameof(ConnectButtonCommand));
+            };
 
             // 构造图表
             RawPlotModel = CreateDemoPlot("Raw Spectrum", OxyColors.SteelBlue);
@@ -84,11 +133,13 @@ namespace RamanSoftwareV2.ViewModels
             };
             _timeTimer.Start();
 
+            //设备校准命令（未实现）
             EquipmentCalibrationCommand = new RelayCommand(_ =>
             {
                 MessageBox.Show("Equipment Calibration 功能未实现");
             });
 
+            //打开连接设置窗口命令
             OpenConnectionSettingsCommand = new RelayCommand(_ =>
             {
                 var win = new ConnectionSettingsWindow();
